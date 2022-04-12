@@ -64,8 +64,6 @@ def sentiment_analyzer(hashtag, limit):
     df['polarity'] = df['Cleaned/Preprocessed Tweet'].apply(lambda x:TextBlob(x).sentiment[0])
     df['subjectivity'] = df['Cleaned/Preprocessed Tweet'].apply(lambda x:TextBlob(x).sentiment[1])
     df['sentiment'] = df['polarity'].apply(getAnalysis)
-    df['sentiment'].unique()
-    x = df['sentiment'].value_counts(0)
     return df
 
 @app.route('/')
@@ -78,7 +76,7 @@ def result():
         hashtag=request.form['hashtag']
         limit=request.form['limit']
         data = sentiment_analyzer(hashtag,int(limit))
-        return render_template('index.html',hashtag="Hashtag:- "+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html()],titles=[''])
+        return render_template('index.html', title = "Sentiment Results", sentiment = data['sentiment'].value_counts(0), hashtag="Hashtag:- "+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html()],titles=[''])
 
 if __name__ == "__main__":
     app.run(debug=True)
